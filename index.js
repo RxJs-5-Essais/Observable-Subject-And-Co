@@ -58,6 +58,19 @@ const testRxObservable=function() {
         console.log("\n");    
     },2000);
 
+    //=========================================
+
+    let fObservable2 = (poObserver)=>{
+        const aData = [100,200,300,400,500];
+        aData.forEach((piData)=>{ //Data emitting
+            poObserver.next(piData); //<<< Comme un appel à la méthode update d'un observer (selon le design pattern).
+            //poObserver.complete(); //Stop la transmission à l'observer => ne recevrait qu'une data, soit ici : 10
+        });
+        console.log("\n");
+    }
+    let oObservable2 = Rx.Observable.create(fObservable2);    
+    oObservable2.subscribe((v)=>console.log(v));
+
 }
 
 
