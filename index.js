@@ -64,13 +64,38 @@ const testRxObservable=function() {
         const aData = [100,200,300,400,500];
         aData.forEach((piData)=>{ //Data emitting
             poObserver.next(piData); //<<< Comme un appel à la méthode update d'un observer (selon le design pattern).
-            //poObserver.complete(); //Stop la transmission à l'observer => ne recevrait qu'une data, soit ici : 10
+            //poObserver.complete(); //Stop la transmission à l'observer => ne recevrait qu'une data, soit ici : 100
         });
         console.log("\n");
     }
     let oObservable2 = Rx.Observable.create(fObservable2);    
-    oObservable2.subscribe((v)=>console.log(v));
+    oObservable2.subscribe((nextedValue)=>console.log(nextedValue));
 
+
+    //=========================================
+
+    let fObservable3 = (poObserver)=>{
+        const aData = [1000,200,300,400,500];
+        aData.forEach((piData)=>{ //Data emitting
+            poObserver.next(piData); //<<< Comme un appel à la méthode update d'un observer (selon le design pattern).
+            poObserver.error("xxxxxx");
+            //poObserver.complete(); //Stop la transmission à l'observer => ne recevrait qu'une data, soit ici : 1000
+        });
+        console.log("\n");
+    }
+    let oObservable3 = new Rx.Observable(fObservable3); 
+    oObservable3.subscribe(
+        fObserver2, //Called on next
+        (psErrMsg) => { console.log('Hey there ! An error has occured !! : '+psErrMsg); }, //Called on error
+        () => { console.log('Called on complete: OK completed!'); }, //Called on complete
+    );
+    //SYNTAXE équivalente à ci-dessus (pour RxJs et non pour ES6 bien sûr) :
+    // oObservable3.subscribe({
+    //     next: fObserver2, //Called on next
+    //     error: (psErrMsg) => { console.log('Hey there ! An error has occured !! : '+psErrMsg); }, //Called on error
+    //     complete: () => { console.log('Called on complete: OK completed!'); }, //Called on complete
+    // });  
+    
 }
 
 
