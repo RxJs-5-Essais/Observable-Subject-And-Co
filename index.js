@@ -89,7 +89,7 @@ const testRxObservable=function() {
         (psErrMsg) => { console.log('Hey there ! An error has occured !! : '+psErrMsg); }, //Called on error
         () => { console.log('Called on complete: OK completed!'); }, //Called on complete
     );
-    //SYNTAXE équivalente à ci-dessus (pour RxJs et non pour ES6 bien sûr) :
+    //SYNTAXE équivalente à ci-dessus (pour RxJs) :
     // oObservable3.subscribe({
     //     next: fObserver2, //Called on next
     //     error: (psErrMsg) => { console.log('Hey there ! An error has occured !! : '+psErrMsg); }, //Called on error
@@ -154,14 +154,16 @@ console.log("Contrairement à un Observable, un Subject ne notifie pas les obser
 
 
 
-//La différence entre un Subject et un BehaviorSubject, est que lors de la souscription d'un observer à un BehaviorSubject :
-// l'observer est immédiatement notifié de la dernière valeur ayant été "nextée" par le BehaviorSubject, aux observers pré-existants.
-// Si aucune valeur n'avait encore été "nextée" par le BehaviorSubject, alors celle transmise à l'observer au moment de sa souscription,
-// sera celle qui, a été passée en paramètre du constructeur du BehaviorSubject (valant alors éventuellement undefined si 
-// elle n'avait pas été précisée).
+//La différence entre un Subject et un BehaviorSubject, est que lors de la souscription d'un observer 
+//à un BehaviorSubject :
+//  l'observer est immédiatement notifié de la dernière valeur ayant été "nextée" par le BehaviorSubject, 
+//  aux observers pré-existants.
+//  Si aucune valeur n'avait encore été "nextée" par le BehaviorSubject, alors celle transmise à l'observer 
+//  au moment de sa souscription,  sera celle qui, a été passée en paramètre du constructeur du BehaviorSubject 
+//  (valant alors éventuellement undefined si elle n'avait pas été précisée).
 const testBehaviorSubject=function() {
 
-    console.log("\n\n", "******************** Rx.BehaviorSubject ********************", "\n\n");    
+console.log("\n\n", "******************** Rx.BehaviorSubject ********************", "\n\n");    
 console.log("La différence entre un Subject et un BehaviorSubject, est que lors de la souscription d'un observer à un BehaviorSubject : "+
 "l'observer est immédiatement notifié de la dernière valeur ayant été 'nextée' par le BehaviorSubject, aux observers pré-existants. "+
 "Si aucune valeur n'avait encore été 'nextée' par le BehaviorSubject, alors celle transmise à l'observer au moment de sa souscription, "+
@@ -177,9 +179,12 @@ console.log("La différence entre un Subject et un BehaviorSubject, est que lors
 
     let oBehaviorSubject = new Rx.BehaviorSubject("Initial data (facultative)");
 
+    console.log("  oBehaviorSubject.getValue()="+oBehaviorSubject.getValue()+" (dern. valeur connue).\n\n"); // "Initial data (facultative)"
+
     const oSubscriptionA = oBehaviorSubject.subscribe(fObserver1); 
     oBehaviorSubject.next("sent dataX to all observers (fObserver1 only for the moment)");
     oBehaviorSubject.next("sent dataZZZZ");
+    console.log("  oBehaviorSubject.getValue()="+oBehaviorSubject.getValue()+" (dern. valeur connue).\n\n"); // "sent dataZZZZ"
     console.log("\n");
 
     const oSubscriptionB = oBehaviorSubject.subscribe(fObserver2); //<< fObserver2 souscrit, donc il est automatiquement notifié avec 
@@ -222,10 +227,13 @@ console.log("La différence entre un Subject et un BehaviorSubject, est que lors
 }
 
 
-//La différence entre un BehaviorSubject et un ReplaySubject, est que lors de la souscription d'un observer à un ReplaySubject :
-// l'observer est immédiatement notifié des N dernières valeurs ayant été "nextées" par le ReplaySubject, aux observers pré-existants.
-// Si n'ont été pécédemment "nextées" que moins de N valeurs, soit X ce nombre, alors le ReplaySubject, notifiera à tout prochain souscrivant,
-// ces X notifications. X pouvant valoir 0 bien sûr. N étant un nombre à passer au constructeur du ReplaySubject.
+//La différence entre un BehaviorSubject et un ReplaySubject, est que lors de la souscription d'un observer à 
+// un ReplaySubject :
+//  l'observer est immédiatement notifié des N dernières valeurs ayant été "nextées" par le ReplaySubject, 
+//  aux observers pré-existants.
+//  Si n'ont été pécédemment "nextées" que moins de N valeurs, soit X ce nombre, alors le ReplaySubject, 
+//  notifiera à tout prochain souscrivant,
+//  ces X notifications. X pouvant valoir 0 bien sûr. N étant un nombre à passer au constructeur du ReplaySubject.
 const testReplaySubject=function() {
 
     console.log("\n\n", "******************** Rx.ReplaySubject ********************", "\n\n");    
